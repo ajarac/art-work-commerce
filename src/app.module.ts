@@ -5,6 +5,8 @@ import { ArtistController } from './controllers/artist.controller';
 import { Surreal } from 'surrealdb.js';
 import { PersonController } from './controllers/person.controller';
 import { PersonRepository } from './repositories/person.repository';
+import { ProductRepository } from './repositories/product.repository';
+import { ProductController } from './controllers/product.controller';
 
 const SurrealProvider = {
 	provide: Surreal,
@@ -27,7 +29,7 @@ const SurrealProvider = {
 
 @Module({
 	imports: [],
-	controllers: [AppController, ArtistController, PersonController],
-	providers: [SurrealProvider, ArtistRepository, PersonRepository],
+	controllers: [AppController, ArtistController, PersonController, ProductController],
+	providers: [SurrealProvider, ArtistRepository, PersonRepository, ProductRepository],
 })
 export class AppModule {}
