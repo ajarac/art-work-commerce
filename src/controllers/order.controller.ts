@@ -1,22 +1,37 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
-import { OrderRepository } from '../repositories/order.repository';
+import { Controller, Get, Query } from '@nestjs/common';
+import { OrderQueryFilter, OrderRepository } from '../repositories/order.repository';
 import { Order } from '../models/order';
-import { PaginationResponse } from '../helpers/pagination';
+import { PaginationRequestQueryParams, PaginationResponse } from '../helpers/pagination';
+import { IsDate, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+
+class OrderQueryFilterQueryParams implements OrderQueryFilter {
+	@IsNotEmpty()
+	@IsNumber()
+	page: number;
+	@IsNotEmpty()
+	@IsNumber()
+	limit: number;
+	@IsString()
+	country: string;
+	@IsDate()
+	@IsOptional()
+	startDate: Date;
+	@IsDate()
+	@IsOptional()
+	endDate: Date;
+}
 
 @Controller()
 export class OrderController {
 	constructor(private readonly orderRepository: OrderRepository) {}
 
 	@Get('orders')
-	async getOrders(@Query('page') page: string, @Query('limit') limit: string): Promise<PaginationResponse<Order>> {
-		const pageInt = parseInt(page) || 1;
-		const limitInt = parseInt(limit) || 10;
-		return this.orderRepository.getOrders(pageInt, limitInt);
+	async getOrders(@Query() { page, limit }: PaginationRequestQueryParams): Promise<PaginationResponse<Order>> {
+		return this.orderRepository.getOrders(page, limit);
 	}
 
-	@Get('orders/:city/:datetime')
-	async getOrderBy(@Param('city') city: string, @Param('datetime') datetime: string): Promise<Order> {
-		const id = [city, datetime];
-		return this.orderRepository.getOrderById(JSON.stringify(id));
+	@Get('orders/filtered')
+	async getOrdersFiltered(@Query() query: OrderQueryFilterQueryParams): Promise<PaginationResponse<Order>> {
+		return this.orderRepository.getOrdersFiltered(query);
 	}
 }

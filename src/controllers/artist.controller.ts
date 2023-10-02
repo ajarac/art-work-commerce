@@ -1,6 +1,6 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ArtistRepository } from '../repositories/artist.repository';
-import { PaginationResponse } from '../helpers/pagination';
+import { PaginationRequestQueryParams, PaginationResponse } from '../helpers/pagination';
 import { Artist } from '../models/artist';
 
 @Controller()
@@ -8,10 +8,8 @@ export class ArtistController {
 	constructor(private readonly artistRepository: ArtistRepository) {}
 
 	@Get('artists')
-	async getArtists(@Query('page') page: string, @Query('limit') limit: string): Promise<PaginationResponse<Artist>> {
-		const pageInt = parseInt(page) || 1;
-		const limitInt = parseInt(limit) || 10;
-		return this.artistRepository.getArtists(pageInt, limitInt);
+	async getArtists(@Query() { page, limit }: PaginationRequestQueryParams): Promise<PaginationResponse<Artist>> {
+		return this.artistRepository.getArtists(page, limit);
 	}
 
 	@Get('artists/:id')

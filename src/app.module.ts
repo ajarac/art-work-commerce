@@ -24,7 +24,7 @@ const SurrealProvider = {
 		});
 
 		// Select a specific namespace / database
-		await db.use({ ns: 'test', db: 'test' });
+		await db.use({ ns: 'upc', db: 'art_work' });
 		return db;
 	},
 };

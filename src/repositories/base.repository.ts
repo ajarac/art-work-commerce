@@ -3,32 +3,21 @@ import { PaginationResponse } from '../helpers/pagination';
 import { SurrealIdMapper } from './id.mapper';
 
 type Entity = { id: string } & Record<string | number | symbol, unknown>;
+type PaginationResult<T> = [T[], { count: number }[]];
 
 export class BaseRepository {
 	constructor(protected readonly surrealDB: Surreal) {}
 
 	protected async getPaginationEntity<T extends Entity>(table: string, page: number, limit: number): Promise<PaginationResponse<T>> {
-		const paginationQuery = `SELECT *
-                             FROM ${table}
-                             ORDER BY when DESC LIMIT $limit
-                             START $start`;
-		const totalQuery = `SELECT count()
-                        FROM ${table}
-                        GROUP ALL`;
+		const paginationQuery = `SELECT * FROM ${table} LIMIT $limit START $start`;
+		const totalQuery = `SELECT count() FROM ${table} GROUP ALL`;
 		const variablesQuery = {
 			limit: limit,
 			start: (page - 1) * limit,
 		};
-		const [entities, total] = await this.surrealDB.query<
-			[
-				T[],
-				{
-					count: number;
-				}[],
-			]
-		>(`${paginationQuery};${totalQuery}`, variablesQuery);
+		const [entities, total] = await this.surrealDB.query<PaginationResult<T>>(`${paginationQuery};${totalQuery}`, variablesQuery);
 		return {
-			total: total.result[0].count,
+			total: total.result[0]?.count || 0,
 			result: entities.result.map((entity) => ({
 				...entity,
 				id: SurrealIdMapper(entity.id),

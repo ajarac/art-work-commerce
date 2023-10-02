@@ -17,12 +17,16 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "data:import": " surreal import --conn http://localhost:8000 --user root --pass password --ns upc --db art_work surreal_deal_v1.surql"
   },
   "dependencies": {
     "@nestjs/common": "^9.0.0",
     "@nestjs/core": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.0",
+    "moment": "^2.29.4",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0",
     "surrealdb.js": "^0.9.1"

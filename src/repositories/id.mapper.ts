@@ -1,1 +1,4 @@
-export const SurrealIdMapper = (id: string) => id.split(':')[1];
+export const SurrealIdMapper = (id: string) => {
+	const [_, ...restId] = id.split(':');
+	return restId.join(':');
+};

@@ -4,7 +4,7 @@ services:
   surrealdb:
     image: surrealdb/surrealdb:latest
     restart: always
-    command: start --user $SURREAL_DB_USER --pass $SURREAL_DB_PASSWORD file:/data/database.db
+    command: start --user root --pass password file:/data/database.db
     ports:
       - 8000:8000
     volumes:
