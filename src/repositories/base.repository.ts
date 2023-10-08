@@ -1,5 +1,5 @@
 import { Surreal } from 'surrealdb.js';
-import { PaginationResponse } from '../helpers/pagination';
+import { buildPaginationQuery, PaginationResponse } from '../helpers/pagination';
 import { SurrealIdMapper } from './id.mapper';
 
 type Entity = { id: string } & Record<string | number | symbol, unknown>;
@@ -11,10 +11,7 @@ export class BaseRepository {
 	protected async getPaginationEntity<T extends Entity>(table: string, page: number, limit: number): Promise<PaginationResponse<T>> {
 		const paginationQuery = `SELECT * FROM ${table} LIMIT $limit START $start`;
 		const totalQuery = `SELECT count() FROM ${table} GROUP ALL`;
-		const variablesQuery = {
-			limit: limit,
-			start: (page - 1) * limit,
-		};
+		const variablesQuery = buildPaginationQuery(page, limit);
 		const [entities, total] = await this.surrealDB.query<PaginationResult<T>>(`${paginationQuery};${totalQuery}`, variablesQuery);
 		return {
 			total: total.result[0]?.count || 0,

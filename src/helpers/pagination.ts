@@ -11,3 +11,8 @@ export interface PaginationResponse<T> {
 	result: T[];
 	total: number;
 }
+
+export const buildPaginationQuery = (page: number, limit: number) => ({
+	limit: limit,
+	start: (page - 1) * limit,
+});

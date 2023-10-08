@@ -1,5 +1,5 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
-import { ArtistRepository } from '../repositories/artist.repository';
+import { ArtistRepository, TopArtists } from '../repositories/artist.repository';
 import { PaginationRequestQueryParams, PaginationResponse } from '../helpers/pagination';
 import { Artist } from '../models/artist';
 
@@ -15,5 +15,10 @@ export class ArtistController {
 	@Get('artists/:id')
 	async getArtistById(@Param('id') id: string): Promise<Artist> {
 		return this.artistRepository.getArtistById(id);
+	}
+
+	@Get('artist/top/creators')
+	async getTopCreators(@Query() { page, limit }: PaginationRequestQueryParams): Promise<PaginationResponse<TopArtists>> {
+		return this.artistRepository.getTopCreators(page, limit);
 	}
 }
