@@ -31,8 +31,8 @@ export class ArtistRepository extends BaseRepository {
 	}
 
 	async getTopCreators(page, limit: number): Promise<PaginationResponse<TopArtists>> {
-		const queryTop = 'select count() as total, in as id from create group by id order by total desc limit $limit start $start';
-		const queryCount = 'select count() from (select count() as total, in from create group by in order by total desc) group all';
+		const queryTop = 'SELECT count() AS total, in AS id FROM create GROUP BY id ORDER BY total DESC limit $limit START $start';
+		const queryCount = 'SELECT count() FROM (SELECT in FROM create GROUP BY in) GROUP ALL';
 		const query = `${queryTop};${queryCount}`;
 		const variablesQuery = buildPaginationQuery(page, limit);
 		const [entities, total] = await this.surrealDB.query<[SurrealTopArtist[], { count: number }[]]>(query, variablesQuery);
