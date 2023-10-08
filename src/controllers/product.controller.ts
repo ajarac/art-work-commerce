@@ -21,4 +21,9 @@ export class ProductController {
 	async getProductsByArtistId(@Param('id') artistId: string): Promise<Product[]> {
 		return this.productRepository.getProductsByArtistId(artistId);
 	}
+
+	@Get('person/:id/products/recommended')
+	getProductsRecommendedByPersonId(@Param('id') personId: string): Promise<Product[]> {
+		return this.productRepository.getRecommendedProductsByPersonId(personId);
+	}
 }
