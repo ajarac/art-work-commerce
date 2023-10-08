@@ -26,12 +26,12 @@ export class OrderController {
 	constructor(private readonly orderRepository: OrderRepository) {}
 
 	@Get('orders')
-	async getOrders(@Query() { page, limit }: PaginationRequestQueryParams): Promise<PaginationResponse<Order>> {
+	getOrders(@Query() { page, limit }: PaginationRequestQueryParams): Promise<PaginationResponse<Order>> {
 		return this.orderRepository.getOrders(page, limit);
 	}
 
 	@Get('orders/filtered')
-	async getOrdersFiltered(@Query() query: OrderQueryFilterQueryParams): Promise<PaginationResponse<Order>> {
+	getOrdersFiltered(@Query() query: OrderQueryFilterQueryParams): Promise<PaginationResponse<Order>> {
 		return this.orderRepository.getOrdersFiltered(query);
 	}
 }

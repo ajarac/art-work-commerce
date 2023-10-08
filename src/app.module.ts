@@ -9,6 +9,8 @@ import { ProductRepository } from './repositories/product.repository';
 import { ProductController } from './controllers/product.controller';
 import { OrderRepository } from './repositories/order.repository';
 import { OrderController } from './controllers/order.controller';
+import { ReviewRepository } from './repositories/review.repository';
+import { ReviewController } from './controllers/review.controller';
 
 const SurrealProvider = {
 	provide: Surreal,
@@ -31,7 +33,7 @@ const SurrealProvider = {
 
 @Module({
 	imports: [],
-	controllers: [AppController, ArtistController, PersonController, ProductController, OrderController],
-	providers: [SurrealProvider, ArtistRepository, PersonRepository, ProductRepository, OrderRepository],
+	controllers: [AppController, ArtistController, PersonController, ProductController, OrderController, ReviewController],
+	providers: [SurrealProvider, ArtistRepository, PersonRepository, ProductRepository, OrderRepository, ReviewRepository],
 })
 export class AppModule {}

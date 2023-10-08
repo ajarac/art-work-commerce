@@ -11,9 +11,10 @@ const ARTIST_TABLE = 'artist';
 type SurrealArtist = SurrealResultType<Artist>;
 
 export interface TopArtists {
+	artist: Artist;
 	total: number;
-	id: string;
 }
+
 type SurrealTopArtist = SurrealResultType<TopArtists>;
 
 @Injectable()
@@ -31,14 +32,30 @@ export class ArtistRepository extends BaseRepository {
 	}
 
 	async getTopCreators(page, limit: number): Promise<PaginationResponse<TopArtists>> {
-		const queryTop = 'SELECT count() AS total, in AS id FROM create GROUP BY id ORDER BY total DESC limit $limit START $start';
+		const queryTop =
+			'SELECT count() AS total, in AS artist FROM create GROUP BY artist ORDER BY total DESC LIMIT $limit START $start fetch artist';
 		const queryCount = 'SELECT count() FROM (SELECT in FROM create GROUP BY in) GROUP ALL';
 		const query = `${queryTop};${queryCount}`;
 		const variablesQuery = buildPaginationQuery(page, limit);
-		const [entities, total] = await this.surrealDB.query<[SurrealTopArtist[], { count: number }[]]>(query, variablesQuery);
+		const [entities, total] = await this.surrealDB.query<
+			[
+				SurrealTopArtist[],
+				{
+					count: number;
+				}[],
+			]
+		>(query, variablesQuery);
 		return {
 			total: total.result[0]?.count || 0,
-			result: entities.result.map((entity) => ({ ...entity, id: SurrealIdMapper(entity.id) })),
+			result: entities.result.map(({ total, artist }) => {
+				return {
+					total,
+					artist: {
+						...artist,
+						id: SurrealIdMapper(artist.id),
+					},
+				};
+			}),
 		};
 	}
 }
