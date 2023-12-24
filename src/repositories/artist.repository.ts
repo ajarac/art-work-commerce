@@ -33,7 +33,7 @@ export class ArtistRepository extends BaseRepository {
 
 	async getTopCreators(page, limit: number): Promise<PaginationResponse<TopArtists>> {
 		const queryTop =
-			'SELECT count() AS total, in AS artist FROM create GROUP BY artist ORDER BY total DESC LIMIT $limit START $start fetch artist';
+			'SELECT count() AS total, in AS artist FROM create GROUP BY artist ORDER BY total DESC LIMIT $limit START $start FETCH artist';
 		const queryCount = 'SELECT count() FROM (SELECT in FROM create GROUP BY in) GROUP ALL';
 		const query = `${queryTop};${queryCount}`;
 		const variablesQuery = buildPaginationQuery(page, limit);

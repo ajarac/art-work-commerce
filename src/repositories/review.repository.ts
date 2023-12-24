@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { BaseRepository } from './base.repository';
 import { Surreal } from 'surrealdb.js';
-import { PaginationResponse } from '../helpers/pagination';
+import { buildPaginationQuery, PaginationResponse } from '../helpers/pagination';
 import { Review, ReviewExtended } from '../models/review';
 import { SurrealResultType } from '../helpers/surreal-result.type';
 import { SurrealIdMapper } from './id.mapper';
@@ -16,12 +16,26 @@ export class ReviewRepository extends BaseRepository {
 		super(surrealDB);
 	}
 
-	async getReviews(page: number, limit: number): Promise<PaginationResponse<Review>> {
-		return this.getPaginationEntity<SurrealReview>(REVIEW_TABLE, page, limit);
+	async getReviewsByProductId(orderId: string, page: number, limit: number): Promise<PaginationResponse<Review>> {
+		const query = `SELECT * FROM ${REVIEW_TABLE} WHERE product = $orderId LIMIT $limit START $start`;
+		const variablesQuery = {
+			orderId: `product:${orderId}`,
+			...buildPaginationQuery(page, limit),
+		};
+		const [reviews, total] = await this.surrealDB.query<[SurrealReview[], { count: number }[]]>(query, variablesQuery);
+		return {
+			total: total.result[0]?.count || 0,
+			result: reviews.result.map((review) => {
+				return {
+					...review,
+					id: SurrealIdMapper(review.id),
+				};
+			}),
+		};
 	}
 
 	async getReviewExtendedById(id: string): Promise<ReviewExtended> {
-		const query = `select * from review:${id} fetch person, artist, product`;
+		const query = `SELECT * FROM review:${id} FETCH person, artist, product`;
 		const [review] = await this.surrealDB.query<[SurrealReviewExtended[]]>(query);
 		const resultReview = review.result[0];
 		if (resultReview == null) {

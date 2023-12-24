@@ -8,14 +8,18 @@ class OrderQueryFilterQueryParams implements OrderQueryFilter {
 	@IsNotEmpty()
 	@IsNumber()
 	page: number;
+
 	@IsNotEmpty()
 	@IsNumber()
 	limit: number;
+
 	@IsString()
 	country: string;
+
 	@IsDate()
 	@IsOptional()
 	startDate: Date;
+
 	@IsDate()
 	@IsOptional()
 	endDate: Date;

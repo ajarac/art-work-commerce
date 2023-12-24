@@ -9,3 +9,19 @@ services:
       - 8000:8000
     volumes:
       - ./data:/data
+  backend:
+    build:
+        context: .
+        dockerfile: Dockerfile
+    restart: always
+    ports:
+      - 3000:3000
+    environment:
+      - SURREALDB_URL=http://surrealdb:8000
+      - SURREALDB_USER=root
+      - SURREALDB_PASS=password
+      - SURREALDB_DATABASE=file:/data/database.db
+      - SURREALDB_NS=upc
+      - SURREALDB_DB=art_work
+    volumes:
+      - ./data:/data

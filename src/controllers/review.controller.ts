@@ -7,9 +7,12 @@ import { ReviewRepository } from '../repositories/review.repository';
 export class ReviewController {
 	constructor(private readonly reviewRepository: ReviewRepository) {}
 
-	@Get('reviews')
-	getReviews(@Query() { page, limit }: PaginationRequestQueryParams): Promise<PaginationResponse<Review>> {
-		return this.reviewRepository.getReviews(page, limit);
+	@Get('product/:productId/reviews')
+	getReviews(
+		@Param('productId') productId: string,
+		@Query() { page, limit }: PaginationRequestQueryParams,
+	): Promise<PaginationResponse<Review>> {
+		return this.reviewRepository.getReviewsByProductId(productId, page, limit);
 	}
 
 	@Get('reviews/:id')

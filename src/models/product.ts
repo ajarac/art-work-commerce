@@ -9,11 +9,3 @@ export interface Product {
 	price: number;
 	quantity: number;
 }
-
-export interface ProductCreated {
-	id: string;
-	in: string;
-	out: string;
-	product_name: string;
-	quantity: number;
-}

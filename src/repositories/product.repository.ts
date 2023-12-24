@@ -35,7 +35,7 @@ export class ProductRepository extends BaseRepository {
 	}
 
 	async getRecommendedProductsByPersonId(personId: string): Promise<Product[]> {
-		const query = `select array::distinct(->order->product<-order<-person->order->product) as products from person:${personId} fetch products`;
+		const query = `SELECT array::distinct(->order->product<-order<-person->order->product) AS products FROM person:${personId} FETCH products`;
 		const [products] = await this.surrealDB.query<[{ products: SurrealProduct[] }[]]>(query);
 		return products.result[0].products.map((product) => {
 			product.id = SurrealIdMapper(product.id);
