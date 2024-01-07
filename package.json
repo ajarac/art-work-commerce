@@ -18,7 +18,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "data:import": " surreal import --conn http://localhost:8000 --user root --pass password --ns upc --db art_work surreal_deal_v1.surql"
+    "data:import": "surreal import --conn http://localhost:8000 --user root --pass password --ns upc --db art_work surreal_deal_v1.surql"
   },
   "dependencies": {
     "@nestjs/common": "^9.0.0",

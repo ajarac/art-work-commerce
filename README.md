@@ -11,7 +11,7 @@ In the diagram below, the nodes in pink are the  [standard tables](https://surre
 
 ![enter image description here](https://surrealdb.com/static/img/docs/surrealql/surreal-deal-dataset-870a17f5d54faaf495d2e555c2656775.png)
 
-# Run the project
+# Run the project to develop
 First we need to install the dependencies:
 
     yarn install
@@ -19,7 +19,7 @@ First we need to install the dependencies:
 Then we need to have [docker and docker compose](https://www.docker.com/) installed
 Once you have installed it, you can run the docker compose with:
 
-    docker-compose up -d
+    docker-compose up -d surrealdb
 Then import the data set with:
 
     yarn data:import
@@ -28,6 +28,15 @@ Once it is finished, we can run the project with:
 
     yarn start
 It will connect automatically to the DB in docker compose.
+
+# Run the project to productio
+First we need to have [docker and docker compose](https://www.docker.com/) installed, and then just run:
+
+    docker-compose up -d
+
+and import the data set with:
+
+    yarn data:import
 
 # Postman collection
 The file `Art work e-commerce.postman_collection.json` is a collection for postman to be able to use the different endpoints of the projects like:
